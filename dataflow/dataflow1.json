@@ -1,0 +1,69 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "BookingCosmos",
+						"type": "DatasetReference"
+					},
+					"name": "BookingData"
+				},
+				{
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "FilterBadRecords"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          booking_id as string,",
+				"          property_id as string,",
+				"          customer_id as integer,",
+				"          owner_id as string,",
+				"          check_in_date as string,",
+				"          check_out_date as string,",
+				"          booking_date as string,",
+				"          amount as double,",
+				"          currency as string,",
+				"          property_location as (city as string, country as string),",
+				"          timestamp as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     enableChangeFeed: true,",
+				"     changeFeedStartFromTheBeginning: true,",
+				"     format: 'document') ~> BookingData",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source1",
+				"BookingData split(check_out_date<check_in_date,",
+				"     disjoint: false) ~> FilterBadRecords@(BadRecords, AcceptedRecords)",
+				"FilterBadRecords@AcceptedRecords derive(stay_duration = toTimestamp(check_out_date) - toTimestamp(check_in_date),",
+				"          booking_year = year(toTimestamp(booking_date)),",
+				"          booking_month = month(toTimestamp(booking_date)),",
+				"          full_address = concat(property_location.city, ',' ,property_location.country ),",
+				"          city = property_location.city,",
+				"          country = property_location.country,",
+				"          booking_id = booking_id,",
+				"          check_in_date = check_in_date,",
+				"          check_out_date = check_out_date,",
+				"          booking_date = booking_date,",
+				"          amount = amount,",
+				"          property_id = property_id,",
+				"          timestamp = timestamp,",
+				"          customer_id = customer_id,",
+				"          owner_id = owner_id,",
+				"          currency = currency) ~> derivedColumn1"
+			]
+		}
+	}
+}
