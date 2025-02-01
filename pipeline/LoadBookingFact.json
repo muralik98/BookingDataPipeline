@@ -1,6 +1,69 @@
 {
 	"name": "LoadBookingFact",
 	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "BookingDataTransformation",
+						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "AzureDataLakeStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "airbnbcustomer/synapse_stage"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"continuationSettings": {
+						"customizedCheckpointKey": "04529dcd-420a-4343-812c-ec0d4b7859ea"
+					}
+				}
+			},
+			{
+				"name": "TriggerProcedure",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Data flow1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[airbnb].[BookingAggregation]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics2",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
 		"annotations": []
 	}
 }
