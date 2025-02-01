@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "airbnbadf1"
+		},
+		"AzureSynapseAnalytics1_password": {
+			"value": ""
+		},
+		"AzureBlobStorage1_properties_typeProperties_serviceEndpoint": {
+			"value": "https://airbnbadls2.blob.core.windows.net/"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://airbnbadls2.dfs.core.windows.net/"
+		},
+		"AzureSynapseAnalytics1_properties_typeProperties_server": {
+			"value": "airbnbanalytics.sql.azuresynapse.net"
+		},
+		"AzureSynapseAnalytics1_properties_typeProperties_database": {
+			"value": "airbnb_dwh"
+		},
+		"AzureSynapseAnalytics1_properties_typeProperties_userName": {
+			"value": "sqladminuser"
+		},
+		"AzureSynapseAnalytics2_properties_typeProperties_server": {
+			"value": "airbnbanalytics.sql.azuresynapse.net"
+		},
+		"AzureSynapseAnalytics2_properties_typeProperties_database": {
+			"value": "airbnb_dwh"
+		},
+		"CosmosDbNoSql1_properties_typeProperties_accountEndpoint": {
+			"value": "https://airbnbcosmos1.documents.azure.com:443/"
+		},
+		"CosmosDbNoSql1_properties_typeProperties_database": {
+			"value": "AirBnB"
+		}
+	}
+}
